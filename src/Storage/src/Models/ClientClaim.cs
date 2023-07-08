@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+﻿
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -8,34 +8,19 @@ using System.Security.Claims;
 namespace IdentityServer4.Models
 {
     /// <summary>
-    /// A client claim
+    ///     A client claim
     /// </summary>
     public class ClientClaim
     {
         /// <summary>
-        /// The claim type
-        /// </summary>
-        public string Type { get; set; }
-        
-        /// <summary>
-        /// The claim value
-        /// </summary>
-        public string Value { get; set; }
-
-        /// <summary>
-        /// The claim value type
-        /// </summary>
-        public string ValueType { get; set; } = ClaimValueTypes.String;
-
-        /// <summary>
-        /// ctor
+        ///     ctor
         /// </summary>
         public ClientClaim()
         {
         }
 
         /// <summary>
-        /// ctor
+        ///     ctor
         /// </summary>
         /// <param name="type"></param>
         /// <param name="value"></param>
@@ -46,7 +31,7 @@ namespace IdentityServer4.Models
         }
 
         /// <summary>
-        /// ctor
+        ///     ctor
         /// </summary>
         /// <param name="type"></param>
         /// <param name="value"></param>
@@ -58,12 +43,27 @@ namespace IdentityServer4.Models
             ValueType = valueType;
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        ///     The claim type
+        /// </summary>
+        public string Type { get; set; }
+
+        /// <summary>
+        ///     The claim value
+        /// </summary>
+        public string Value { get; set; }
+
+        /// <summary>
+        ///     The claim value type
+        /// </summary>
+        public string ValueType { get; set; } = ClaimValueTypes.String;
+
+        /// <inheritdoc />
         public override int GetHashCode()
         {
-            unchecked 
+            unchecked
             {
-                int hash = 17;
+                var hash = 17;
 
                 hash = hash * 23 + Value.GetHashCode();
                 hash = hash * 23 + Type.GetHashCode();
@@ -72,15 +72,19 @@ namespace IdentityServer4.Models
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
-            if (obj is null) return false;
+            if (obj is null)
+            {
+                return false;
+            }
+
             if (obj is ClientClaim c)
             {
-                return (string.Equals(Type, c.Type, StringComparison.Ordinal) &&
-                        string.Equals(Value, c.Value, StringComparison.Ordinal) &&
-                        string.Equals(ValueType, c.ValueType, StringComparison.Ordinal));
+                return string.Equals(Type, c.Type, StringComparison.Ordinal) &&
+                       string.Equals(Value, c.Value, StringComparison.Ordinal) &&
+                       string.Equals(ValueType, c.ValueType, StringComparison.Ordinal);
             }
 
             return false;

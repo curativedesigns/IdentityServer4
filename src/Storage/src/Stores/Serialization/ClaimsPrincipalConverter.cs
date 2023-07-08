@@ -1,4 +1,4 @@
-// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -19,10 +19,14 @@ namespace IdentityServer4.Stores.Serialization
             return typeof(ClaimsPrincipal) == objectType;
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+            JsonSerializer serializer)
         {
             var source = serializer.Deserialize<ClaimsPrincipalLite>(reader);
-            if (source == null) return null;
+            if (source == null)
+            {
+                return null;
+            }
 
             var claims = source.Claims.Select(x => new Claim(x.Type, x.Value, x.ValueType));
             var id = new ClaimsIdentity(claims, source.AuthenticationType, JwtClaimTypes.Name, JwtClaimTypes.Role);
@@ -37,7 +41,8 @@ namespace IdentityServer4.Stores.Serialization
             var target = new ClaimsPrincipalLite
             {
                 AuthenticationType = source.Identity.AuthenticationType,
-                Claims = source.Claims.Select(x => new ClaimLite { Type = x.Type, Value = x.Value, ValueType = x.ValueType }).ToArray()
+                Claims = source.Claims
+                    .Select(x => new ClaimLite { Type = x.Type, Value = x.Value, ValueType = x.ValueType }).ToArray()
             };
             serializer.Serialize(writer, target);
         }

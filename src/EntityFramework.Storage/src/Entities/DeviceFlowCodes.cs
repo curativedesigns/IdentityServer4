@@ -3,79 +3,79 @@
 namespace IdentityServer4.EntityFramework.Entities
 {
     /// <summary>
-    /// Entity for device flow codes
+    ///     Entity for device flow codes
     /// </summary>
     public class DeviceFlowCodes
     {
         /// <summary>
-        /// Gets or sets the device code.
+        ///     Gets or sets the device code.
         /// </summary>
         /// <value>
-        /// The device code.
+        ///     The device code.
         /// </value>
         public string DeviceCode { get; set; }
 
         /// <summary>
-        /// Gets or sets the user code.
+        ///     Gets or sets the user code.
         /// </summary>
         /// <value>
-        /// The user code.
+        ///     The user code.
         /// </value>
         public string UserCode { get; set; }
 
         /// <summary>
-        /// Gets or sets the subject identifier.
+        ///     Gets or sets the subject identifier.
         /// </summary>
         /// <value>
-        /// The subject identifier.
+        ///     The subject identifier.
         /// </value>
         public string SubjectId { get; set; }
 
         /// <summary>
-        /// Gets or sets the session identifier.
+        ///     Gets or sets the session identifier.
         /// </summary>
         /// <value>
-        /// The session identifier.
+        ///     The session identifier.
         /// </value>
         public string SessionId { get; set; }
 
         /// <summary>
-        /// Gets or sets the client identifier.
+        ///     Gets or sets the client identifier.
         /// </summary>
         /// <value>
-        /// The client identifier.
+        ///     The client identifier.
         /// </value>
         public string ClientId { get; set; }
 
         /// <summary>
-        /// Gets the description the user assigned to the device being authorized.
+        ///     Gets the description the user assigned to the device being authorized.
         /// </summary>
         /// <value>
-        /// The description.
+        ///     The description.
         /// </value>
         public string Description { get; set; }
 
         /// <summary>
-        /// Gets or sets the creation time.
+        ///     Gets or sets the creation time.
         /// </summary>
         /// <value>
-        /// The creation time.
+        ///     The creation time.
         /// </value>
         public DateTime CreationTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the expiration.
+        ///     Gets or sets the expiration.
         /// </summary>
         /// <value>
-        /// The expiration.
+        ///     The expiration.
         /// </value>
         public DateTime? Expiration { get; set; }
 
         /// <summary>
-        /// Gets or sets the data.
+        ///     Gets or sets the data.
         /// </summary>
         /// <value>
-        /// The data.
+        ///     The data.
         /// </value>
         public string Data { get; set; }
     }

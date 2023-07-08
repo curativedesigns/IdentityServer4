@@ -1,38 +1,38 @@
-// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using IdentityServer4.EntityFramework.Interfaces;
 using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace IdentityServer4.EntityFramework.Stores
 {
     /// <summary>
-    /// Implementation of IResourceStore thats uses EF.
+    ///     Implementation of IResourceStore thats uses EF.
     /// </summary>
     /// <seealso cref="IdentityServer4.Stores.IResourceStore" />
     public class ResourceStore : IResourceStore
     {
         /// <summary>
-        /// The DbContext.
+        ///     The DbContext.
         /// </summary>
         protected readonly IConfigurationDbContext Context;
-        
+
         /// <summary>
-        /// The logger.
+        ///     The logger.
         /// </summary>
         protected readonly ILogger<ResourceStore> Logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ResourceStore"/> class.
+        ///     Initializes a new instance of the <see cref="ResourceStore" /> class.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="logger">The logger.</param>
@@ -44,19 +44,23 @@ namespace IdentityServer4.EntityFramework.Stores
         }
 
         /// <summary>
-        /// Finds the API resources by name.
+        ///     Finds the API resources by name.
         /// </summary>
         /// <param name="apiResourceNames">The names.</param>
         /// <returns></returns>
-        public virtual async Task<IEnumerable<ApiResource>> FindApiResourcesByNameAsync(IEnumerable<string> apiResourceNames)
+        public virtual async Task<IEnumerable<ApiResource>> FindApiResourcesByNameAsync(
+            IEnumerable<string> apiResourceNames)
         {
-            if (apiResourceNames == null) throw new ArgumentNullException(nameof(apiResourceNames));
+            if (apiResourceNames == null)
+            {
+                throw new ArgumentNullException(nameof(apiResourceNames));
+            }
 
             var query =
                 from apiResource in Context.ApiResources
                 where apiResourceNames.Contains(apiResource.Name)
                 select apiResource;
-            
+
             var apis = query
                 .Include(x => x.Secrets)
                 .Include(x => x.Scopes)
@@ -81,11 +85,12 @@ namespace IdentityServer4.EntityFramework.Stores
         }
 
         /// <summary>
-        /// Gets API resources by scope name.
+        ///     Gets API resources by scope name.
         /// </summary>
         /// <param name="scopeNames"></param>
         /// <returns></returns>
-        public virtual async Task<IEnumerable<ApiResource>> FindApiResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
+        public virtual async Task<IEnumerable<ApiResource>> FindApiResourcesByScopeNameAsync(
+            IEnumerable<string> scopeNames)
         {
             var names = scopeNames.ToArray();
 
@@ -111,11 +116,12 @@ namespace IdentityServer4.EntityFramework.Stores
         }
 
         /// <summary>
-        /// Gets identity resources by scope name.
+        ///     Gets identity resources by scope name.
         /// </summary>
         /// <param name="scopeNames"></param>
         /// <returns></returns>
-        public virtual async Task<IEnumerable<IdentityResource>> FindIdentityResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
+        public virtual async Task<IEnumerable<IdentityResource>> FindIdentityResourcesByScopeNameAsync(
+            IEnumerable<string> scopeNames)
         {
             var scopes = scopeNames.ToArray();
 
@@ -138,7 +144,7 @@ namespace IdentityServer4.EntityFramework.Stores
         }
 
         /// <summary>
-        /// Gets scopes by scope name.
+        ///     Gets scopes by scope name.
         /// </summary>
         /// <param name="scopeNames"></param>
         /// <returns></returns>
@@ -165,14 +171,14 @@ namespace IdentityServer4.EntityFramework.Stores
         }
 
         /// <summary>
-        /// Gets all resources.
+        ///     Gets all resources.
         /// </summary>
         /// <returns></returns>
         public virtual async Task<Resources> GetAllResourcesAsync()
         {
             var identity = Context.IdentityResources
-              .Include(x => x.UserClaims)
-              .Include(x => x.Properties);
+                .Include(x => x.UserClaims)
+                .Include(x => x.Properties);
 
             var apis = Context.ApiResources
                 .Include(x => x.Secrets)
@@ -180,7 +186,7 @@ namespace IdentityServer4.EntityFramework.Stores
                 .Include(x => x.UserClaims)
                 .Include(x => x.Properties)
                 .AsNoTracking();
-            
+
             var scopes = Context.ApiScopes
                 .Include(x => x.UserClaims)
                 .Include(x => x.Properties)
@@ -192,9 +198,9 @@ namespace IdentityServer4.EntityFramework.Stores
                 (await scopes.ToArrayAsync()).Select(x => x.ToModel())
             );
 
-            Logger.LogDebug("Found {scopes} as all scopes, and {apis} as API resources", 
-                result.IdentityResources.Select(x=>x.Name).Union(result.ApiScopes.Select(x=>x.Name)),
-                result.ApiResources.Select(x=>x.Name));
+            Logger.LogDebug("Found {scopes} as all scopes, and {apis} as API resources",
+                result.IdentityResources.Select(x => x.Name).Union(result.ApiScopes.Select(x => x.Name)),
+                result.ApiResources.Select(x => x.Name));
 
             return result;
         }

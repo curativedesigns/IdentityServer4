@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+﻿
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -8,20 +8,20 @@ using IdentityServer4.Models;
 namespace IdentityServer4.EntityFramework.Mappers
 {
     /// <summary>
-    /// Extension methods to map to/from entity/model for persisted grants.
+    ///     Extension methods to map to/from entity/model for persisted grants.
     /// </summary>
     public static class PersistedGrantMappers
     {
         static PersistedGrantMappers()
         {
-            Mapper = new MapperConfiguration(cfg =>cfg.AddProfile<PersistedGrantMapperProfile>())
+            Mapper = new MapperConfiguration(cfg => cfg.AddProfile<PersistedGrantMapperProfile>())
                 .CreateMapper();
         }
 
         internal static IMapper Mapper { get; }
 
         /// <summary>
-        /// Maps an entity to a model.
+        ///     Maps an entity to a model.
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
@@ -31,7 +31,7 @@ namespace IdentityServer4.EntityFramework.Mappers
         }
 
         /// <summary>
-        /// Maps a model to an entity.
+        ///     Maps a model to an entity.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
@@ -41,7 +41,7 @@ namespace IdentityServer4.EntityFramework.Mappers
         }
 
         /// <summary>
-        /// Updates an entity from a model.
+        ///     Updates an entity from a model.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="entity">The entity.</param>

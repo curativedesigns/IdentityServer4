@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+﻿
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -17,7 +17,8 @@ namespace IdentityServer4.Stores.Serialization
             return typeof(Claim) == objectType;
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+            JsonSerializer serializer)
         {
             var source = serializer.Deserialize<ClaimLite>(reader);
             var target = new Claim(source.Type, source.Value, source.ValueType);

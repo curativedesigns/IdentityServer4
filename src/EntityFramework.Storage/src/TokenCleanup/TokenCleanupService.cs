@@ -1,30 +1,29 @@
-// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using IdentityServer4.EntityFramework.Entities;
 using IdentityServer4.EntityFramework.Interfaces;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace IdentityServer4.EntityFramework
 {
     /// <summary>
-    /// Helper to cleanup stale persisted grants and device codes.
+    ///     Helper to cleanup stale persisted grants and device codes.
     /// </summary>
     public class TokenCleanupService
     {
+        private readonly ILogger<TokenCleanupService> _logger;
+        private readonly IOperationalStoreNotification _operationalStoreNotification;
         private readonly OperationalStoreOptions _options;
         private readonly IPersistedGrantDbContext _persistedGrantDbContext;
-        private readonly IOperationalStoreNotification _operationalStoreNotification;
-        private readonly ILogger<TokenCleanupService> _logger;
 
         /// <summary>
-        /// Constructor for TokenCleanupService.
+        ///     Constructor for TokenCleanupService.
         /// </summary>
         /// <param name="options"></param>
         /// <param name="persistedGrantDbContext"></param>
@@ -32,21 +31,25 @@ namespace IdentityServer4.EntityFramework
         /// <param name="logger"></param>
         public TokenCleanupService(
             OperationalStoreOptions options,
-            IPersistedGrantDbContext persistedGrantDbContext, 
+            IPersistedGrantDbContext persistedGrantDbContext,
             ILogger<TokenCleanupService> logger,
             IOperationalStoreNotification operationalStoreNotification = null)
         {
             _options = options ?? throw new ArgumentNullException(nameof(options));
-            if (_options.TokenCleanupBatchSize < 1) throw new ArgumentException("Token cleanup batch size interval must be at least 1");
+            if (_options.TokenCleanupBatchSize < 1)
+            {
+                throw new ArgumentException("Token cleanup batch size interval must be at least 1");
+            }
 
-            _persistedGrantDbContext = persistedGrantDbContext ?? throw new ArgumentNullException(nameof(persistedGrantDbContext));
+            _persistedGrantDbContext = persistedGrantDbContext ??
+                                       throw new ArgumentNullException(nameof(persistedGrantDbContext));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             _operationalStoreNotification = operationalStoreNotification;
         }
 
         /// <summary>
-        /// Method to clear expired persisted grants.
+        ///     Method to clear expired persisted grants.
         /// </summary>
         /// <returns></returns>
         public async Task RemoveExpiredGrantsAsync()
@@ -65,13 +68,13 @@ namespace IdentityServer4.EntityFramework
         }
 
         /// <summary>
-        /// Removes the stale persisted grants.
+        ///     Removes the stale persisted grants.
         /// </summary>
         /// <returns></returns>
         protected virtual async Task RemoveGrantsAsync()
         {
-            var found = Int32.MaxValue;
-            
+            var found = int.MaxValue;
+
             while (found >= _options.TokenCleanupBatchSize)
             {
                 var expiredGrants = await _persistedGrantDbContext.PersistedGrants
@@ -98,12 +101,12 @@ namespace IdentityServer4.EntityFramework
 
 
         /// <summary>
-        /// Removes the stale device codes.
+        ///     Removes the stale device codes.
         /// </summary>
         /// <returns></returns>
         protected virtual async Task RemoveDeviceCodesAsync()
         {
-            var found = Int32.MaxValue;
+            var found = int.MaxValue;
 
             while (found >= _options.TokenCleanupBatchSize)
             {

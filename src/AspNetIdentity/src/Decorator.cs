@@ -1,38 +1,37 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+﻿
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using System;
 
-namespace IdentityServer4.AspNetIdentity
+namespace IdentityServer4.AspNetIdentity;
+
+internal class Decorator<TService>
 {
-    internal class Decorator<TService>
+    public Decorator(TService instance)
     {
-        public TService Instance { get; set; }
-
-        public Decorator(TService instance)
-        {
-            Instance = instance;
-        }
+        Instance = instance;
     }
 
-    internal class Decorator<TService, TImpl> : Decorator<TService>
-        where TImpl : class, TService
+    public TService Instance { get; set; }
+}
+
+internal class Decorator<TService, TImpl> : Decorator<TService>
+    where TImpl : class, TService
+{
+    public Decorator(TImpl instance) : base(instance)
     {
-        public Decorator(TImpl instance) : base(instance)
-        {
-        }
+    }
+}
+
+internal class DisposableDecorator<TService> : Decorator<TService>, IDisposable
+{
+    public DisposableDecorator(TService instance) : base(instance)
+    {
     }
 
-    internal class DisposableDecorator<TService> : Decorator<TService>, IDisposable
+    public void Dispose()
     {
-        public DisposableDecorator(TService instance) : base(instance)
-        {
-        }
-
-        public void Dispose()
-        {
-            (Instance as IDisposable)?.Dispose();
-        }
+        (Instance as IDisposable)?.Dispose();
     }
 }

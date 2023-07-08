@@ -1,4 +1,4 @@
-// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -10,22 +10,20 @@ using System.Diagnostics;
 namespace IdentityServer4.Models
 {
     /// <summary>
-    /// Models a user identity resource.
+    ///     Models a user identity resource.
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     public class IdentityResource : Resource
     {
-        private string DebuggerDisplay => Name ?? $"{{{typeof(IdentityResource)}}}";
-        
         /// <summary>
-        /// Initializes a new instance of the <see cref="IdentityResource"/> class.
+        ///     Initializes a new instance of the <see cref="IdentityResource" /> class.
         /// </summary>
         public IdentityResource()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="IdentityResource"/> class.
+        ///     Initializes a new instance of the <see cref="IdentityResource" /> class.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="userClaims">List of associated user claims that should be included when this resource is requested.</param>
@@ -35,7 +33,7 @@ namespace IdentityServer4.Models
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="IdentityResource"/> class.
+        ///     Initializes a new instance of the <see cref="IdentityResource" /> class.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="displayName">The display name.</param>
@@ -44,26 +42,37 @@ namespace IdentityServer4.Models
         /// <exception cref="System.ArgumentException">Must provide at least one claim type - claimTypes</exception>
         public IdentityResource(string name, string displayName, IEnumerable<string> userClaims)
         {
-            if (name.IsMissing()) throw new ArgumentNullException(nameof(name));
-            if (userClaims.IsNullOrEmpty()) throw new ArgumentException("Must provide at least one claim type", nameof(userClaims));
+            if (name.IsMissing())
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (userClaims.IsNullOrEmpty())
+            {
+                throw new ArgumentException("Must provide at least one claim type", nameof(userClaims));
+            }
 
             Name = name;
             DisplayName = displayName;
 
-            foreach(var type in userClaims)
+            foreach (var type in userClaims)
             {
                 UserClaims.Add(type);
             }
         }
 
+        private string DebuggerDisplay => Name ?? $"{{{typeof(IdentityResource)}}}";
+
         /// <summary>
-        /// Specifies whether the user can de-select the scope on the consent screen (if the consent screen wants to implement such a feature). Defaults to false.
+        ///     Specifies whether the user can de-select the scope on the consent screen (if the consent screen wants to implement
+        ///     such a feature). Defaults to false.
         /// </summary>
         public bool Required { get; set; } = false;
 
         /// <summary>
-        /// Specifies whether the consent screen will emphasize this scope (if the consent screen wants to implement such a feature). 
-        /// Use this setting for sensitive or important scopes. Defaults to false.
+        ///     Specifies whether the consent screen will emphasize this scope (if the consent screen wants to implement such a
+        ///     feature).
+        ///     Use this setting for sensitive or important scopes. Defaults to false.
         /// </summary>
         public bool Emphasize { get; set; } = false;
     }

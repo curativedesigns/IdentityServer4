@@ -1,4 +1,4 @@
-// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace IdentityServer4.Stores.Serialization
 {
     /// <summary>
-    /// JSON-based persisted grant serializer
+    ///     JSON-based persisted grant serializer
     /// </summary>
     /// <seealso cref="IdentityServer4.Stores.Serialization.IPersistentGrantSerializer" />
     public class PersistentGrantSerializer : IPersistentGrantSerializer
@@ -25,7 +25,7 @@ namespace IdentityServer4.Stores.Serialization
         }
 
         /// <summary>
-        /// Serializes the specified value.
+        ///     Serializes the specified value.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="value">The value.</param>
@@ -36,7 +36,7 @@ namespace IdentityServer4.Stores.Serialization
         }
 
         /// <summary>
-        /// Deserializes the specified string.
+        ///     Deserializes the specified string.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="json">The json.</param>

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+﻿
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -48,7 +48,7 @@ namespace IdentityServer4.EntityFramework.Entities
         public int RefreshTokenUsage { get; set; } = (int)TokenUsage.OneTimeOnly;
         public bool UpdateAccessTokenClaimsOnRefresh { get; set; }
         public int RefreshTokenExpiration { get; set; } = (int)TokenExpiration.Absolute;
-        public int AccessTokenType { get; set; } = (int)0; // AccessTokenType.Jwt;
+        public int AccessTokenType { get; set; } = 0; // AccessTokenType.Jwt;
         public bool EnableLocalLogin { get; set; } = true;
         public List<ClientIdPRestriction> IdentityProviderRestrictions { get; set; }
         public bool IncludeJwtId { get; set; }

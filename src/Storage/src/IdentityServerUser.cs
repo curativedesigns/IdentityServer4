@@ -1,4 +1,4 @@
-// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -12,60 +12,67 @@ using System.Security.Claims;
 namespace IdentityServer4
 {
     /// <summary>
-    /// Model properties of an IdentityServer user
+    ///     Model properties of an IdentityServer user
     /// </summary>
     internal class IdentityServerUser
     {
         /// <summary>
-        /// Subject ID (mandatory)
-        /// </summary>
-        public string SubjectId { get; }
-
-        /// <summary>
-        /// Display name (optional)
-        /// </summary>
-        public string DisplayName { get; set; }
-
-        /// <summary>
-        /// Identity provider (optional)
-        /// </summary>
-        public string IdentityProvider { get; set; }
-
-        /// <summary>
-        /// Authentication methods
-        /// </summary>
-        public ICollection<string> AuthenticationMethods { get; set; } = new HashSet<string>();
-
-        /// <summary>
-        /// Authentication time
-        /// </summary>
-        public DateTime? AuthenticationTime { get; set; }
-
-        /// <summary>
-        /// Additional claims
-        /// </summary>
-        public ICollection<Claim> AdditionalClaims { get; set; } = new HashSet<Claim>(new ClaimComparer());
-
-        /// <summary>
-        /// Initializes a user identity
+        ///     Initializes a user identity
         /// </summary>
         /// <param name="subjectId">The subject ID</param>
         public IdentityServerUser(string subjectId)
         {
-            if (subjectId.IsMissing()) throw new ArgumentException("SubjectId is mandatory", nameof(subjectId));
+            if (subjectId.IsMissing())
+            {
+                throw new ArgumentException("SubjectId is mandatory", nameof(subjectId));
+            }
 
             SubjectId = subjectId;
         }
 
         /// <summary>
-        /// Creates an IdentityServer claims principal
+        ///     Subject ID (mandatory)
+        /// </summary>
+        public string SubjectId { get; }
+
+        /// <summary>
+        ///     Display name (optional)
+        /// </summary>
+        public string DisplayName { get; set; }
+
+        /// <summary>
+        ///     Identity provider (optional)
+        /// </summary>
+        public string IdentityProvider { get; set; }
+
+        /// <summary>
+        ///     Authentication methods
+        /// </summary>
+        public ICollection<string> AuthenticationMethods { get; set; } = new HashSet<string>();
+
+        /// <summary>
+        ///     Authentication time
+        /// </summary>
+        public DateTime? AuthenticationTime { get; set; }
+
+        /// <summary>
+        ///     Additional claims
+        /// </summary>
+        public ICollection<Claim> AdditionalClaims { get; set; } = new HashSet<Claim>(new ClaimComparer());
+
+        /// <summary>
+        ///     Creates an IdentityServer claims principal
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public ClaimsPrincipal CreatePrincipal()
         {
-            if (SubjectId.IsMissing()) throw new ArgumentException("SubjectId is mandatory", nameof(SubjectId));
-            var claims = new List<Claim> { new Claim(JwtClaimTypes.Subject, SubjectId) };
+            if (SubjectId.IsMissing())
+            {
+                throw new ArgumentException("SubjectId is mandatory", nameof(SubjectId));
+            }
+
+            var claims = new List<Claim> { new(JwtClaimTypes.Subject, SubjectId) };
 
             if (DisplayName.IsPresent())
             {
@@ -79,7 +86,8 @@ namespace IdentityServer4
 
             if (AuthenticationTime.HasValue)
             {
-                claims.Add(new Claim(JwtClaimTypes.AuthenticationTime, new DateTimeOffset(AuthenticationTime.Value).ToUnixTimeSeconds().ToString()));
+                claims.Add(new Claim(JwtClaimTypes.AuthenticationTime,
+                    new DateTimeOffset(AuthenticationTime.Value).ToUnixTimeSeconds().ToString()));
             }
 
             if (AuthenticationMethods.Any())
@@ -92,7 +100,8 @@ namespace IdentityServer4
 
             claims.AddRange(AdditionalClaims);
 
-            var id = new ClaimsIdentity(claims.Distinct(new ClaimComparer()), Constants.IdentityServerAuthenticationType, JwtClaimTypes.Name, JwtClaimTypes.Role);
+            var id = new ClaimsIdentity(claims.Distinct(new ClaimComparer()),
+                Constants.IdentityServerAuthenticationType, JwtClaimTypes.Name, JwtClaimTypes.Role);
             return new ClaimsPrincipal(id);
         }
     }

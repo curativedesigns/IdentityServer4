@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+﻿
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -6,28 +6,36 @@ using IdentityServer4.EntityFramework.Entities;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace IdentityServer4.EntityFramework.Extensions
 {
     /// <summary>
-    /// Extension methods to define the database schema for the configuration and operational data stores.
+    ///     Extension methods to define the database schema for the configuration and operational data stores.
     /// </summary>
     public static class ModelBuilderExtensions
     {
-        private static EntityTypeBuilder<TEntity> ToTable<TEntity>(this EntityTypeBuilder<TEntity> entityTypeBuilder, TableConfiguration configuration)
+        private static EntityTypeBuilder<TEntity> ToTable<TEntity>(this EntityTypeBuilder<TEntity> entityTypeBuilder,
+            TableConfiguration configuration)
             where TEntity : class
         {
-            return string.IsNullOrWhiteSpace(configuration.Schema) ? entityTypeBuilder.ToTable(configuration.Name) : entityTypeBuilder.ToTable(configuration.Name, configuration.Schema);
+            return string.IsNullOrWhiteSpace(configuration.Schema)
+                ? entityTypeBuilder.ToTable(configuration.Name)
+                : entityTypeBuilder.ToTable(configuration.Name, configuration.Schema);
         }
 
         /// <summary>
-        /// Configures the client context.
+        ///     Configures the client context.
         /// </summary>
         /// <param name="modelBuilder">The model builder.</param>
         /// <param name="storeOptions">The store options.</param>
-        public static void ConfigureClientContext(this ModelBuilder modelBuilder, ConfigurationStoreOptions storeOptions)
+        public static void ConfigureClientContext(this ModelBuilder modelBuilder,
+            ConfigurationStoreOptions storeOptions)
         {
-            if (!string.IsNullOrWhiteSpace(storeOptions.DefaultSchema)) modelBuilder.HasDefaultSchema(storeOptions.DefaultSchema);
+            if (!string.IsNullOrWhiteSpace(storeOptions.DefaultSchema))
+            {
+                modelBuilder.HasDefaultSchema(storeOptions.DefaultSchema);
+            }
 
             modelBuilder.Entity<Client>(client =>
             {
@@ -49,15 +57,24 @@ namespace IdentityServer4.EntityFramework.Extensions
 
                 client.HasIndex(x => x.ClientId).IsUnique();
 
-                client.HasMany(x => x.AllowedGrantTypes).WithOne(x => x.Client).HasForeignKey(x=>x.ClientId).IsRequired().OnDelete(DeleteBehavior.Cascade);
-                client.HasMany(x => x.RedirectUris).WithOne(x => x.Client).HasForeignKey(x => x.ClientId).IsRequired().OnDelete(DeleteBehavior.Cascade);
-                client.HasMany(x => x.PostLogoutRedirectUris).WithOne(x => x.Client).HasForeignKey(x => x.ClientId).IsRequired().OnDelete(DeleteBehavior.Cascade);
-                client.HasMany(x => x.AllowedScopes).WithOne(x => x.Client).HasForeignKey(x => x.ClientId).IsRequired().OnDelete(DeleteBehavior.Cascade);
-                client.HasMany(x => x.ClientSecrets).WithOne(x => x.Client).HasForeignKey(x => x.ClientId).IsRequired().OnDelete(DeleteBehavior.Cascade);
-                client.HasMany(x => x.Claims).WithOne(x => x.Client).HasForeignKey(x => x.ClientId).IsRequired().OnDelete(DeleteBehavior.Cascade);
-                client.HasMany(x => x.IdentityProviderRestrictions).WithOne(x => x.Client).HasForeignKey(x => x.ClientId).IsRequired().OnDelete(DeleteBehavior.Cascade);
-                client.HasMany(x => x.AllowedCorsOrigins).WithOne(x => x.Client).HasForeignKey(x => x.ClientId).IsRequired().OnDelete(DeleteBehavior.Cascade);
-                client.HasMany(x => x.Properties).WithOne(x => x.Client).HasForeignKey(x => x.ClientId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+                client.HasMany(x => x.AllowedGrantTypes).WithOne(x => x.Client).HasForeignKey(x => x.ClientId)
+                    .IsRequired().OnDelete(DeleteBehavior.Cascade);
+                client.HasMany(x => x.RedirectUris).WithOne(x => x.Client).HasForeignKey(x => x.ClientId).IsRequired()
+                    .OnDelete(DeleteBehavior.Cascade);
+                client.HasMany(x => x.PostLogoutRedirectUris).WithOne(x => x.Client).HasForeignKey(x => x.ClientId)
+                    .IsRequired().OnDelete(DeleteBehavior.Cascade);
+                client.HasMany(x => x.AllowedScopes).WithOne(x => x.Client).HasForeignKey(x => x.ClientId).IsRequired()
+                    .OnDelete(DeleteBehavior.Cascade);
+                client.HasMany(x => x.ClientSecrets).WithOne(x => x.Client).HasForeignKey(x => x.ClientId).IsRequired()
+                    .OnDelete(DeleteBehavior.Cascade);
+                client.HasMany(x => x.Claims).WithOne(x => x.Client).HasForeignKey(x => x.ClientId).IsRequired()
+                    .OnDelete(DeleteBehavior.Cascade);
+                client.HasMany(x => x.IdentityProviderRestrictions).WithOne(x => x.Client)
+                    .HasForeignKey(x => x.ClientId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+                client.HasMany(x => x.AllowedCorsOrigins).WithOne(x => x.Client).HasForeignKey(x => x.ClientId)
+                    .IsRequired().OnDelete(DeleteBehavior.Cascade);
+                client.HasMany(x => x.Properties).WithOne(x => x.Client).HasForeignKey(x => x.ClientId).IsRequired()
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<ClientGrantType>(grantType =>
@@ -120,13 +137,17 @@ namespace IdentityServer4.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Configures the persisted grant context.
+        ///     Configures the persisted grant context.
         /// </summary>
         /// <param name="modelBuilder">The model builder.</param>
         /// <param name="storeOptions">The store options.</param>
-        public static void ConfigurePersistedGrantContext(this ModelBuilder modelBuilder, OperationalStoreOptions storeOptions)
+        public static void ConfigurePersistedGrantContext(this ModelBuilder modelBuilder,
+            OperationalStoreOptions storeOptions)
         {
-            if (!string.IsNullOrWhiteSpace(storeOptions.DefaultSchema)) modelBuilder.HasDefaultSchema(storeOptions.DefaultSchema);
+            if (!string.IsNullOrWhiteSpace(storeOptions.DefaultSchema))
+            {
+                modelBuilder.HasDefaultSchema(storeOptions.DefaultSchema);
+            }
 
             modelBuilder.Entity<PersistedGrant>(grant =>
             {
@@ -166,7 +187,7 @@ namespace IdentityServer4.EntityFramework.Extensions
                 // apparently anything over 4K converts to nvarchar(max) on SqlServer
                 codes.Property(x => x.Data).HasMaxLength(50000).IsRequired();
 
-                codes.HasKey(x => new {x.UserCode});
+                codes.HasKey(x => new { x.UserCode });
 
                 codes.HasIndex(x => x.DeviceCode).IsUnique();
                 codes.HasIndex(x => x.Expiration);
@@ -174,13 +195,17 @@ namespace IdentityServer4.EntityFramework.Extensions
         }
 
         /// <summary>
-        /// Configures the resources context.
+        ///     Configures the resources context.
         /// </summary>
         /// <param name="modelBuilder">The model builder.</param>
         /// <param name="storeOptions">The store options.</param>
-        public static void ConfigureResourcesContext(this ModelBuilder modelBuilder, ConfigurationStoreOptions storeOptions)
+        public static void ConfigureResourcesContext(this ModelBuilder modelBuilder,
+            ConfigurationStoreOptions storeOptions)
         {
-            if (!string.IsNullOrWhiteSpace(storeOptions.DefaultSchema)) modelBuilder.HasDefaultSchema(storeOptions.DefaultSchema);
+            if (!string.IsNullOrWhiteSpace(storeOptions.DefaultSchema))
+            {
+                modelBuilder.HasDefaultSchema(storeOptions.DefaultSchema);
+            }
 
             modelBuilder.Entity<IdentityResource>(identityResource =>
             {
@@ -192,8 +217,10 @@ namespace IdentityServer4.EntityFramework.Extensions
 
                 identityResource.HasIndex(x => x.Name).IsUnique();
 
-                identityResource.HasMany(x => x.UserClaims).WithOne(x => x.IdentityResource).HasForeignKey(x => x.IdentityResourceId).IsRequired().OnDelete(DeleteBehavior.Cascade);
-                identityResource.HasMany(x => x.Properties).WithOne(x => x.IdentityResource).HasForeignKey(x => x.IdentityResourceId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+                identityResource.HasMany(x => x.UserClaims).WithOne(x => x.IdentityResource)
+                    .HasForeignKey(x => x.IdentityResourceId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+                identityResource.HasMany(x => x.Properties).WithOne(x => x.IdentityResource)
+                    .HasForeignKey(x => x.IdentityResourceId).IsRequired().OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<IdentityResourceClaim>(claim =>
@@ -211,7 +238,6 @@ namespace IdentityServer4.EntityFramework.Extensions
             });
 
 
-
             modelBuilder.Entity<ApiResource>(apiResource =>
             {
                 apiResource.ToTable(storeOptions.ApiResource).HasKey(x => x.Id);
@@ -223,10 +249,14 @@ namespace IdentityServer4.EntityFramework.Extensions
 
                 apiResource.HasIndex(x => x.Name).IsUnique();
 
-                apiResource.HasMany(x => x.Secrets).WithOne(x => x.ApiResource).HasForeignKey(x => x.ApiResourceId).IsRequired().OnDelete(DeleteBehavior.Cascade);
-                apiResource.HasMany(x => x.Scopes).WithOne(x => x.ApiResource).HasForeignKey(x => x.ApiResourceId).IsRequired().OnDelete(DeleteBehavior.Cascade);
-                apiResource.HasMany(x => x.UserClaims).WithOne(x => x.ApiResource).HasForeignKey(x => x.ApiResourceId).IsRequired().OnDelete(DeleteBehavior.Cascade);
-                apiResource.HasMany(x => x.Properties).WithOne(x => x.ApiResource).HasForeignKey(x => x.ApiResourceId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+                apiResource.HasMany(x => x.Secrets).WithOne(x => x.ApiResource).HasForeignKey(x => x.ApiResourceId)
+                    .IsRequired().OnDelete(DeleteBehavior.Cascade);
+                apiResource.HasMany(x => x.Scopes).WithOne(x => x.ApiResource).HasForeignKey(x => x.ApiResourceId)
+                    .IsRequired().OnDelete(DeleteBehavior.Cascade);
+                apiResource.HasMany(x => x.UserClaims).WithOne(x => x.ApiResource).HasForeignKey(x => x.ApiResourceId)
+                    .IsRequired().OnDelete(DeleteBehavior.Cascade);
+                apiResource.HasMany(x => x.Properties).WithOne(x => x.ApiResource).HasForeignKey(x => x.ApiResourceId)
+                    .IsRequired().OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<ApiResourceSecret>(apiSecret =>
@@ -245,12 +275,12 @@ namespace IdentityServer4.EntityFramework.Extensions
                 apiClaim.Property(x => x.Type).HasMaxLength(200).IsRequired();
             });
 
-            modelBuilder.Entity<ApiResourceScope>((System.Action<EntityTypeBuilder<ApiResourceScope>>)(apiScope =>
-            {
-                apiScope.ToTable((TableConfiguration)storeOptions.ApiResourceScope).HasKey(x => x.Id);
+            modelBuilder.Entity((Action<EntityTypeBuilder<ApiResourceScope>>)(apiScope =>
+           {
+               apiScope.ToTable(storeOptions.ApiResourceScope).HasKey(x => x.Id);
 
-                apiScope.Property(x => x.Scope).HasMaxLength(200).IsRequired();
-            }));
+               apiScope.Property(x => x.Scope).HasMaxLength(200).IsRequired();
+           }));
 
             modelBuilder.Entity<ApiResourceProperty>(property =>
             {
@@ -270,7 +300,8 @@ namespace IdentityServer4.EntityFramework.Extensions
 
                 scope.HasIndex(x => x.Name).IsUnique();
 
-                scope.HasMany(x => x.UserClaims).WithOne(x => x.Scope).HasForeignKey(x => x.ScopeId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+                scope.HasMany(x => x.UserClaims).WithOne(x => x.Scope).HasForeignKey(x => x.ScopeId).IsRequired()
+                    .OnDelete(DeleteBehavior.Cascade);
             });
             modelBuilder.Entity<ApiScopeClaim>(scopeClaim =>
             {
@@ -284,8 +315,6 @@ namespace IdentityServer4.EntityFramework.Extensions
                 property.Property(x => x.Key).HasMaxLength(250).IsRequired();
                 property.Property(x => x.Value).HasMaxLength(2000).IsRequired();
             });
-
-
         }
     }
 }

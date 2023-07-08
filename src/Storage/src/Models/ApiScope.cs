@@ -1,4 +1,4 @@
-// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -10,22 +10,20 @@ using System.Diagnostics;
 namespace IdentityServer4.Models
 {
     /// <summary>
-    /// Models access to an API scope
+    ///     Models access to an API scope
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     public class ApiScope : Resource
     {
-        private string DebuggerDisplay => Name ?? $"{{{typeof(ApiScope)}}}";
-        
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApiScope"/> class.
+        ///     Initializes a new instance of the <see cref="ApiScope" /> class.
         /// </summary>
         public ApiScope()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApiScope"/> class.
+        ///     Initializes a new instance of the <see cref="ApiScope" /> class.
         /// </summary>
         /// <param name="name">The name.</param>
         public ApiScope(string name)
@@ -34,7 +32,7 @@ namespace IdentityServer4.Models
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApiScope"/> class.
+        ///     Initializes a new instance of the <see cref="ApiScope" /> class.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="displayName">The display name.</param>
@@ -44,7 +42,7 @@ namespace IdentityServer4.Models
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApiScope"/> class.
+        ///     Initializes a new instance of the <see cref="ApiScope" /> class.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="userClaims">List of associated user claims that should be included when this resource is requested.</param>
@@ -54,7 +52,7 @@ namespace IdentityServer4.Models
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApiScope"/> class.
+        ///     Initializes a new instance of the <see cref="ApiScope" /> class.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="displayName">The display name.</param>
@@ -62,7 +60,10 @@ namespace IdentityServer4.Models
         /// <exception cref="System.ArgumentNullException">name</exception>
         public ApiScope(string name, string displayName, IEnumerable<string> userClaims)
         {
-            if (name.IsMissing()) throw new ArgumentNullException(nameof(name));
+            if (name.IsMissing())
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
 
             Name = name;
             DisplayName = displayName;
@@ -76,13 +77,16 @@ namespace IdentityServer4.Models
             }
         }
 
+        private string DebuggerDisplay => Name ?? $"{{{typeof(ApiScope)}}}";
+
         /// <summary>
-        /// Specifies whether the user can de-select the scope on the consent screen. Defaults to false.
+        ///     Specifies whether the user can de-select the scope on the consent screen. Defaults to false.
         /// </summary>
         public bool Required { get; set; } = false;
 
         /// <summary>
-        /// Specifies whether the consent screen will emphasize this scope. Use this setting for sensitive or important scopes. Defaults to false.
+        ///     Specifies whether the consent screen will emphasize this scope. Use this setting for sensitive or important scopes.
+        ///     Defaults to false.
         /// </summary>
         public bool Emphasize { get; set; } = false;
     }

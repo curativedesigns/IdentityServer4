@@ -1,10 +1,7 @@
-// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using IdentityModel;
 using IdentityServer4.EntityFramework.Entities;
 using IdentityServer4.EntityFramework.Interfaces;
@@ -13,39 +10,42 @@ using IdentityServer4.Stores;
 using IdentityServer4.Stores.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace IdentityServer4.EntityFramework.Stores
 {
     /// <summary>
-    /// Implementation of IDeviceFlowStore thats uses EF.
+    ///     Implementation of IDeviceFlowStore thats uses EF.
     /// </summary>
     /// <seealso cref="IdentityServer4.Stores.IDeviceFlowStore" />
     public class DeviceFlowStore : IDeviceFlowStore
     {
         /// <summary>
-        /// The DbContext.
+        ///     The DbContext.
         /// </summary>
         protected readonly IPersistedGrantDbContext Context;
 
         /// <summary>
-        ///  The serializer.
-        /// </summary>
-        protected readonly IPersistentGrantSerializer Serializer;
-
-        /// <summary>
-        /// The logger.
+        ///     The logger.
         /// </summary>
         protected readonly ILogger Logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DeviceFlowStore"/> class.
+        ///     The serializer.
+        /// </summary>
+        protected readonly IPersistentGrantSerializer Serializer;
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="DeviceFlowStore" /> class.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="serializer">The serializer</param>
         /// <param name="logger">The logger.</param>
         public DeviceFlowStore(
-            IPersistedGrantDbContext context, 
-            IPersistentGrantSerializer serializer, 
+            IPersistedGrantDbContext context,
+            IPersistentGrantSerializer serializer,
             ILogger<DeviceFlowStore> logger)
         {
             Context = context;
@@ -54,7 +54,7 @@ namespace IdentityServer4.EntityFramework.Stores
         }
 
         /// <summary>
-        /// Stores the device authorization request.
+        ///     Stores the device authorization request.
         /// </summary>
         /// <param name="deviceCode">The device code.</param>
         /// <param name="userCode">The user code.</param>
@@ -68,13 +68,14 @@ namespace IdentityServer4.EntityFramework.Stores
         }
 
         /// <summary>
-        /// Finds device authorization by user code.
+        ///     Finds device authorization by user code.
         /// </summary>
         /// <param name="userCode">The user code.</param>
         /// <returns></returns>
         public virtual async Task<DeviceCode> FindByUserCodeAsync(string userCode)
         {
-            var deviceFlowCodes = (await Context.DeviceFlowCodes.AsNoTracking().Where(x => x.UserCode == userCode).ToArrayAsync())
+            var deviceFlowCodes =
+                (await Context.DeviceFlowCodes.AsNoTracking().Where(x => x.UserCode == userCode).ToArrayAsync())
                 .SingleOrDefault(x => x.UserCode == userCode);
             var model = ToModel(deviceFlowCodes?.Data);
 
@@ -84,13 +85,14 @@ namespace IdentityServer4.EntityFramework.Stores
         }
 
         /// <summary>
-        /// Finds device authorization by device code.
+        ///     Finds device authorization by device code.
         /// </summary>
         /// <param name="deviceCode">The device code.</param>
         /// <returns></returns>
         public virtual async Task<DeviceCode> FindByDeviceCodeAsync(string deviceCode)
         {
-            var deviceFlowCodes = (await Context.DeviceFlowCodes.AsNoTracking().Where(x => x.DeviceCode == deviceCode).ToArrayAsync())
+            var deviceFlowCodes = (await Context.DeviceFlowCodes.AsNoTracking().Where(x => x.DeviceCode == deviceCode)
+                    .ToArrayAsync())
                 .SingleOrDefault(x => x.DeviceCode == deviceCode);
             var model = ToModel(deviceFlowCodes?.Data);
 
@@ -100,7 +102,7 @@ namespace IdentityServer4.EntityFramework.Stores
         }
 
         /// <summary>
-        /// Updates device authorization, searching by user code.
+        ///     Updates device authorization, searching by user code.
         /// </summary>
         /// <param name="userCode">The user code.</param>
         /// <param name="data">The data.</param>
@@ -132,7 +134,7 @@ namespace IdentityServer4.EntityFramework.Stores
         }
 
         /// <summary>
-        /// Removes the device authorization, searching by device code.
+        ///     Removes the device authorization, searching by device code.
         /// </summary>
         /// <param name="deviceCode">The device code.</param>
         /// <returns></returns>
@@ -141,7 +143,7 @@ namespace IdentityServer4.EntityFramework.Stores
             var deviceFlowCodes = (await Context.DeviceFlowCodes.Where(x => x.DeviceCode == deviceCode).ToArrayAsync())
                 .SingleOrDefault(x => x.DeviceCode == deviceCode);
 
-            if(deviceFlowCodes != null)
+            if (deviceFlowCodes != null)
             {
                 Logger.LogDebug("removing {deviceCode} device code from database", deviceCode);
 
@@ -153,7 +155,8 @@ namespace IdentityServer4.EntityFramework.Stores
                 }
                 catch (DbUpdateConcurrencyException ex)
                 {
-                    Logger.LogInformation("exception removing {deviceCode} device code from database: {error}", deviceCode, ex.Message);
+                    Logger.LogInformation("exception removing {deviceCode} device code from database: {error}",
+                        deviceCode, ex.Message);
                 }
             }
             else
@@ -163,7 +166,7 @@ namespace IdentityServer4.EntityFramework.Stores
         }
 
         /// <summary>
-        /// Converts a model to an entity.
+        ///     Converts a model to an entity.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="deviceCode"></param>
@@ -171,7 +174,10 @@ namespace IdentityServer4.EntityFramework.Stores
         /// <returns></returns>
         protected DeviceFlowCodes ToEntity(DeviceCode model, string deviceCode, string userCode)
         {
-            if (model == null || deviceCode == null || userCode == null) return null;
+            if (model == null || deviceCode == null || userCode == null)
+            {
+                return null;
+            }
 
             return new DeviceFlowCodes
             {
@@ -186,13 +192,16 @@ namespace IdentityServer4.EntityFramework.Stores
         }
 
         /// <summary>
-        /// Converts a serialized DeviceCode to a model.
+        ///     Converts a serialized DeviceCode to a model.
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
         protected DeviceCode ToModel(string entity)
         {
-            if (entity == null) return null;
+            if (entity == null)
+            {
+                return null;
+            }
 
             return Serializer.Deserialize<DeviceCode>(entity);
         }

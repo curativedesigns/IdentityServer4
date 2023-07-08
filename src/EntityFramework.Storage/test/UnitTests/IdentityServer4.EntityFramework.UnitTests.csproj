@@ -1,8 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
-
+    <TargetFramework>net7.0</TargetFramework>
     <AssemblyOriginatorKeyFile>../../../../key.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>

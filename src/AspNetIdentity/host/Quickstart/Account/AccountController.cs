@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+﻿
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -59,7 +59,7 @@ namespace IdentityServerHost.Quickstart.UI
             if (vm.IsExternalLoginOnly)
             {
                 // we only have one option for logging in and it's an external provider
-                return RedirectToAction("Challenge", "External", new { scheme = vm.ExternalLoginScheme, returnUrl });
+                return RedirectToAction("Challenge", "External", new { provider = vm.ExternalLoginScheme, returnUrl });
             }
 
             return View(vm);

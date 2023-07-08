@@ -1,16 +1,16 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+﻿
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 namespace IdentityServer4.EntityFramework.Options
 {
     /// <summary>
-    /// Class to control a table's name and schema.
+    ///     Class to control a table's name and schema.
     /// </summary>
     public class TableConfiguration
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TableConfiguration"/> class.
+        ///     Initializes a new instance of the <see cref="TableConfiguration" /> class.
         /// </summary>
         /// <param name="name">The name.</param>
         public TableConfiguration(string name)
@@ -19,7 +19,7 @@ namespace IdentityServer4.EntityFramework.Options
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TableConfiguration"/> class.
+        ///     Initializes a new instance of the <see cref="TableConfiguration" /> class.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="schema">The schema.</param>
@@ -30,18 +30,18 @@ namespace IdentityServer4.EntityFramework.Options
         }
 
         /// <summary>
-        /// Gets or sets the name.
+        ///     Gets or sets the name.
         /// </summary>
         /// <value>
-        /// The name.
+        ///     The name.
         /// </value>
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the schema.
+        ///     Gets or sets the schema.
         /// </summary>
         /// <value>
-        /// The schema.
+        ///     The schema.
         /// </value>
         public string Schema { get; set; }
     }

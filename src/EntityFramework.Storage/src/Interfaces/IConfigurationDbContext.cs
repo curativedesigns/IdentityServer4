@@ -1,56 +1,56 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+﻿
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using System;
 using IdentityServer4.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace IdentityServer4.EntityFramework.Interfaces
 {
     /// <summary>
-    /// Abstraction for the configuration context.
+    ///     Abstraction for the configuration context.
     /// </summary>
     /// <seealso cref="System.IDisposable" />
     public interface IConfigurationDbContext : IDisposable
     {
         /// <summary>
-        /// Gets or sets the clients.
+        ///     Gets or sets the clients.
         /// </summary>
         /// <value>
-        /// The clients.
+        ///     The clients.
         /// </value>
         DbSet<Client> Clients { get; set; }
-        
+
         /// <summary>
-        /// Gets or sets the clients' CORS origins.
+        ///     Gets or sets the clients' CORS origins.
         /// </summary>
         /// <value>
-        /// The clients CORS origins.
+        ///     The clients CORS origins.
         /// </value>
         DbSet<ClientCorsOrigin> ClientCorsOrigins { get; set; }
 
         /// <summary>
-        /// Gets or sets the identity resources.
+        ///     Gets or sets the identity resources.
         /// </summary>
         /// <value>
-        /// The identity resources.
+        ///     The identity resources.
         /// </value>
         DbSet<IdentityResource> IdentityResources { get; set; }
 
         /// <summary>
-        /// Gets or sets the API resources.
+        ///     Gets or sets the API resources.
         /// </summary>
         /// <value>
-        /// The API resources.
+        ///     The API resources.
         /// </value>
         DbSet<ApiResource> ApiResources { get; set; }
 
         /// <summary>
-        /// Gets or sets the scopes.
+        ///     Gets or sets the scopes.
         /// </summary>
         /// <value>
-        /// The identity resources.
+        ///     The identity resources.
         /// </value>
         DbSet<ApiScope> ApiScopes { get; set; }
     }
