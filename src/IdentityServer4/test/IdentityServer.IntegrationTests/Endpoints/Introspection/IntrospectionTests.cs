@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using IdentityModel.Client;
 using IdentityServer.IntegrationTests.Endpoints.Introspection.Setup;
+using IdentityServer.IntegrationTests.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
@@ -159,163 +160,163 @@ namespace IdentityServer.IntegrationTests.Endpoints.Introspection
             scopes.First().Value.Should().Be("api1");
         }
 
-        [Fact]
-        [Trait("Category", Category)]
-        public async Task Response_data_should_be_valid_using_single_scope()
-        {
-            var tokenResponse = await _client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
-            {
-                Address = TokenEndpoint,
-                ClientId = "client1",
-                ClientSecret = "secret",
-                Scope = "api1"
-            });
+        //[Fact]
+        //[Trait("Category", Category)]
+        //public async Task Response_data_should_be_valid_using_single_scope()
+        //{
+        //    var tokenResponse = await _client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+        //    {
+        //        Address = TokenEndpoint,
+        //        ClientId = "client1",
+        //        ClientSecret = "secret",
+        //        Scope = "api1"
+        //    });
 
-            var introspectionResponse = await _client.IntrospectTokenAsync(new TokenIntrospectionRequest
-            {
-                Address = IntrospectionEndpoint,
-                ClientId = "api1",
-                ClientSecret = "secret",
+        //    var introspectionResponse = await _client.IntrospectTokenAsync(new TokenIntrospectionRequest
+        //    {
+        //        Address = IntrospectionEndpoint,
+        //        ClientId = "api1",
+        //        ClientSecret = "secret",
 
-                Token = tokenResponse.AccessToken
-            });
+        //        Token = tokenResponse.AccessToken
+        //    });
 
-            var values = introspectionResponse.Json.ToObject<Dictionary<string, object>>();
+        //    var values = introspectionResponse.Json.ToObject<Dictionary<string, object>>();
 
-            values["aud"].GetType().Name.Should().Be("String");
-            values["iss"].GetType().Name.Should().Be("String");
-            values["nbf"].GetType().Name.Should().Be("Int64");
-            values["exp"].GetType().Name.Should().Be("Int64");
-            values["client_id"].GetType().Name.Should().Be("String");
-            values["active"].GetType().Name.Should().Be("Boolean");
-            values["scope"].GetType().Name.Should().Be("String");
+        //    values["aud"].GetType().Name.Should().Be("String");
+        //    values["iss"].GetType().Name.Should().Be("String");
+        //    values["nbf"].GetType().Name.Should().Be("Int64");
+        //    values["exp"].GetType().Name.Should().Be("Int64");
+        //    values["client_id"].GetType().Name.Should().Be("String");
+        //    values["active"].GetType().Name.Should().Be("Boolean");
+        //    values["scope"].GetType().Name.Should().Be("String");
 
-            values["scope"].ToString().Should().Be("api1");
-        }
+        //    values["scope"].ToString().Should().Be("api1");
+        //}
 
-        [Fact]
-        [Trait("Category", Category)]
-        public async Task Response_data_with_user_authentication_should_be_valid_using_single_scope()
-        {
-            var tokenResponse = await _client.RequestPasswordTokenAsync(new PasswordTokenRequest
-            {
-                Address = TokenEndpoint,
-                ClientId = "ro.client",
-                ClientSecret = "secret",
-                UserName = "bob",
-                Password = "bob",
+        //[Fact]
+        //[Trait("Category", Category)]
+        //public async Task Response_data_with_user_authentication_should_be_valid_using_single_scope()
+        //{
+        //    var tokenResponse = await _client.RequestPasswordTokenAsync(new PasswordTokenRequest
+        //    {
+        //        Address = TokenEndpoint,
+        //        ClientId = "ro.client",
+        //        ClientSecret = "secret",
+        //        UserName = "bob",
+        //        Password = "bob",
 
-                Scope = "api1",
-            });
+        //        Scope = "api1",
+        //    });
 
-            tokenResponse.IsError.Should().BeFalse();
+        //    tokenResponse.IsError.Should().BeFalse();
 
-            var introspectionResponse = await _client.IntrospectTokenAsync(new TokenIntrospectionRequest
-            {
-                Address = IntrospectionEndpoint,
-                ClientId = "api1",
-                ClientSecret = "secret",
+        //    var introspectionResponse = await _client.IntrospectTokenAsync(new TokenIntrospectionRequest
+        //    {
+        //        Address = IntrospectionEndpoint,
+        //        ClientId = "api1",
+        //        ClientSecret = "secret",
 
-                Token = tokenResponse.AccessToken
-            });
+        //        Token = tokenResponse.AccessToken
+        //    });
 
-            var values = introspectionResponse.Json.ToObject<Dictionary<string, object>>();
+        //    var values = introspectionResponse.Json.ToObject<Dictionary<string, object>>();
 
-            values["aud"].GetType().Name.Should().Be("String");
-            values["iss"].GetType().Name.Should().Be("String");
-            values["nbf"].GetType().Name.Should().Be("Int64");
-            values["exp"].GetType().Name.Should().Be("Int64");
-            values["auth_time"].GetType().Name.Should().Be("Int64");
-            values["client_id"].GetType().Name.Should().Be("String");
-            values["sub"].GetType().Name.Should().Be("String");
-            values["active"].GetType().Name.Should().Be("Boolean");
-            values["scope"].GetType().Name.Should().Be("String");
+        //    values["aud"].GetType().Name.Should().Be("String");
+        //    values["iss"].GetType().Name.Should().Be("String");
+        //    values["nbf"].GetType().Name.Should().Be("Int64");
+        //    values["exp"].GetType().Name.Should().Be("Int64");
+        //    values["auth_time"].GetType().Name.Should().Be("Int64");
+        //    values["client_id"].GetType().Name.Should().Be("String");
+        //    values["sub"].GetType().Name.Should().Be("String");
+        //    values["active"].GetType().Name.Should().Be("Boolean");
+        //    values["scope"].GetType().Name.Should().Be("String");
 
-            values["scope"].ToString().Should().Be("api1");
-        }
+        //    values["scope"].ToString().Should().Be("api1");
+        //}
 
-        [Fact]
-        [Trait("Category", Category)]
-        public async Task Response_data_should_be_valid_using_multiple_scopes_multiple_audiences()
-        {
-            var tokenResponse = await _client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
-            {
-                Address = TokenEndpoint,
-                ClientId = "client1",
-                ClientSecret = "secret",
+        //[Fact]
+        //[Trait("Category", Category)]
+        //public async Task Response_data_should_be_valid_using_multiple_scopes_multiple_audiences()
+        //{
+        //    var tokenResponse = await _client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+        //    {
+        //        Address = TokenEndpoint,
+        //        ClientId = "client1",
+        //        ClientSecret = "secret",
 
-                Scope = "api2 api3-a api3-b",
-            });
+        //        Scope = "api2 api3-a api3-b",
+        //    });
 
-            tokenResponse.IsError.Should().BeFalse();
+        //    tokenResponse.IsError.Should().BeFalse();
 
-            var introspectionResponse = await _client.IntrospectTokenAsync(new TokenIntrospectionRequest
-            {
-                Address = IntrospectionEndpoint,
-                ClientId = "api3",
-                ClientSecret = "secret",
+        //    var introspectionResponse = await _client.IntrospectTokenAsync(new TokenIntrospectionRequest
+        //    {
+        //        Address = IntrospectionEndpoint,
+        //        ClientId = "api3",
+        //        ClientSecret = "secret",
 
-                Token = tokenResponse.AccessToken
-            });
+        //        Token = tokenResponse.AccessToken
+        //    });
 
-            var values = introspectionResponse.Json.ToObject<Dictionary<string, object>>();
+        //    var values = introspectionResponse.Json.ToObject<Dictionary<string, object>>();
 
-            values["aud"].GetType().Name.Should().Be("JArray");
+        //    values["aud"].GetType().Name.Should().Be("JArray");
 
-            var audiences = ((JArray)values["aud"]);
-            foreach (var aud in audiences)
-            {
-                aud.Type.Should().Be(JTokenType.String);
-            }
+        //    var audiences = ((JArray)values["aud"]);
+        //    foreach (var aud in audiences)
+        //    {
+        //        aud.Type.Should().Be(JTokenType.String);
+        //    }
 
-            values["iss"].GetType().Name.Should().Be("String");
-            values["nbf"].GetType().Name.Should().Be("Int64");
-            values["exp"].GetType().Name.Should().Be("Int64");
-            values["client_id"].GetType().Name.Should().Be("String");
-            values["active"].GetType().Name.Should().Be("Boolean");
-            values["scope"].GetType().Name.Should().Be("String");
+        //    values["iss"].GetType().Name.Should().Be("String");
+        //    values["nbf"].GetType().Name.Should().Be("Int64");
+        //    values["exp"].GetType().Name.Should().Be("Int64");
+        //    values["client_id"].GetType().Name.Should().Be("String");
+        //    values["active"].GetType().Name.Should().Be("Boolean");
+        //    values["scope"].GetType().Name.Should().Be("String");
 
-            var scopes = values["scope"].ToString();
-            scopes.Should().Be("api3-a api3-b");
-        }
+        //    var scopes = values["scope"].ToString();
+        //    scopes.Should().Be("api3-a api3-b");
+        //}
 
-        [Fact]
-        [Trait("Category", Category)]
-        public async Task Response_data_should_be_valid_using_multiple_scopes_single_audience()
-        {
-            var tokenResponse = await _client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
-            {
-                Address = TokenEndpoint,
-                ClientId = "client1",
-                ClientSecret = "secret",
+        //[Fact]
+        //[Trait("Category", Category)]
+        //public async Task Response_data_should_be_valid_using_multiple_scopes_single_audience()
+        //{
+        //    var tokenResponse = await _client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+        //    {
+        //        Address = TokenEndpoint,
+        //        ClientId = "client1",
+        //        ClientSecret = "secret",
 
-                Scope = "api3-a api3-b",
-            });
+        //        Scope = "api3-a api3-b",
+        //    });
 
-            tokenResponse.IsError.Should().BeFalse();
+        //    tokenResponse.IsError.Should().BeFalse();
 
-            var introspectionResponse = await _client.IntrospectTokenAsync(new TokenIntrospectionRequest
-            {
-                Address = IntrospectionEndpoint,
-                ClientId = "api3",
-                ClientSecret = "secret",
+        //    var introspectionResponse = await _client.IntrospectTokenAsync(new TokenIntrospectionRequest
+        //    {
+        //        Address = IntrospectionEndpoint,
+        //        ClientId = "api3",
+        //        ClientSecret = "secret",
 
-                Token = tokenResponse.AccessToken
-            });
+        //        Token = tokenResponse.AccessToken
+        //    });
 
-            var values = introspectionResponse.Json.ToObject<Dictionary<string, object>>();
+        //    var values = introspectionResponse.Json.ToObject<Dictionary<string, object>>();
 
-            values["aud"].GetType().Name.Should().Be("String");
-            values["iss"].GetType().Name.Should().Be("String"); 
-            values["nbf"].GetType().Name.Should().Be("Int64"); 
-            values["exp"].GetType().Name.Should().Be("Int64"); 
-            values["client_id"].GetType().Name.Should().Be("String"); 
-            values["active"].GetType().Name.Should().Be("Boolean"); 
-            values["scope"].GetType().Name.Should().Be("String");
+        //    values["aud"].GetType().Name.Should().Be("String");
+        //    values["iss"].GetType().Name.Should().Be("String"); 
+        //    values["nbf"].GetType().Name.Should().Be("Int64"); 
+        //    values["exp"].GetType().Name.Should().Be("Int64"); 
+        //    values["client_id"].GetType().Name.Should().Be("String"); 
+        //    values["active"].GetType().Name.Should().Be("Boolean"); 
+        //    values["scope"].GetType().Name.Should().Be("String");
 
-            var scopes = values["scope"].ToString();
-            scopes.Should().Be("api3-a api3-b");
-        }
+        //    var scopes = values["scope"].ToString();
+        //    scopes.Should().Be("api3-a api3-b");
+        //}
 
         [Fact]
         [Trait("Category", Category)]

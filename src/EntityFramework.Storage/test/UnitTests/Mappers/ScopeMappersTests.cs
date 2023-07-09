@@ -1,4 +1,4 @@
-﻿
+
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -15,7 +15,7 @@ namespace IdentityServer4.EntityFramework.UnitTests.Mappers
         [Fact]
         public void ScopeAutomapperConfigurationIsValid()
         {
-            ScopeMappers.Mapper.ConfigurationProvider.AssertConfigurationIsValid<ScopeMapperProfile>();
+            ScopeMappers.Mapper.ConfigurationProvider.AssertConfigurationIsValid();
         }
 
         [Fact]

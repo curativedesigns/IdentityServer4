@@ -22,15 +22,15 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\src\IdentityServer4.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
         <None Update="identityserver_testing.cer">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
         <None Update="identityserver_testing.pfx">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\src\IdentityServer4.csproj" />
     </ItemGroup>
 </Project>

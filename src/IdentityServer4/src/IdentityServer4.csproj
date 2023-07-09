@@ -41,6 +41,6 @@
         <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="6.31.0" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\Storage\src\IdentityServer4.Storage.csproj" />
+      <ProjectReference Include="..\..\Storage\src\IdentityServer4.Storage.csproj" />
     </ItemGroup>
 </Project>
