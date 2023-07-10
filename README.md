@@ -3,7 +3,7 @@ This project is a forked version of IdentityServer4 in support of .NET 7
 ** Pull requests are welcome **
 
 ## Roadmap
-Fix any broken/commented-out tests associated with any of the solutions. Rebrand. Distribute via official channels (eg nuget.org)
+Testing and Examples. Rebrand. Distribute via official channels (eg nuget.org)
 
 ## About IdentityServer4
 [<img align="right" width="100px" src="https://dotnetfoundation.org/img/logo_big.svg" />](https://dotnetfoundation.org/projects?searchquery=IdentityServer&type=project)
