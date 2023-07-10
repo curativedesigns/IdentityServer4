@@ -1,6 +1,6 @@
 # Sponsors
 
-We thank those who [support](https://www.patreon.com/identityserver) IdentityServer!
+We thank those who support us!
 
 ## Corporate
 
