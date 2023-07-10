@@ -25,8 +25,7 @@ namespace IdentityServer.UnitTests.Extensions
             };
 
             Func<Task> a = () => store.GetAllEnabledResourcesAsync();
-            a.Should().ThrowAsync<Exception>();
-            //.And.Message.ToLowerInvariant().Should().Contain("duplicate").And.Contain("identity scopes");
+            a.Should().ThrowAsync<Exception>().Where(e => e.Message.Contains("duplicate") && e.Message.Contains("identity scopes"));
         }
 
         [Fact]
@@ -51,8 +50,7 @@ namespace IdentityServer.UnitTests.Extensions
             };
 
             Func<Task> a = () => store.GetAllEnabledResourcesAsync();
-            a.Should().ThrowAsync<Exception>();
-            //.And.Message.ToLowerInvariant().Should().Contain("duplicate").And.Contain("api resources");
+            a.Should().ThrowAsync<Exception>().Where(e => e.Message.Contains("duplicate") && e.Message.Contains("api resources"));
         }
 
         [Fact]
@@ -77,8 +75,7 @@ namespace IdentityServer.UnitTests.Extensions
             };
 
             Func<Task> a = () => store.FindResourcesByScopeAsync(new string[] { "A" });
-            a.Should().ThrowAsync<Exception>();
-            //.And.Message.ToLowerInvariant().Should().Contain("duplicate").And.Contain("identity scopes");
+            a.Should().ThrowAsync<Exception>().Where(e => e.Message.Contains("duplicate") && e.Message.Contains("identity scopes"));
         }
 
         [Fact]
