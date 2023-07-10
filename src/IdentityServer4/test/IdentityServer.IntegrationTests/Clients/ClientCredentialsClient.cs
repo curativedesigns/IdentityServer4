@@ -7,11 +7,14 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using FluentAssertions;
 using IdentityModel;
 using IdentityModel.Client;
 using IdentityServer.IntegrationTests.Clients.Setup;
+using IdentityServer.IntegrationTests.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
@@ -117,39 +120,39 @@ namespace IdentityServer.IntegrationTests.Clients
             scopes.First().ToString().Should().Be("api1");
         }
 
-        //[Fact]
-        //public async Task Valid_request_with_confirmation_should_return_expected_payload()
-        //{
-        //    var response = await _client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
-        //    {
-        //        Address = TokenEndpoint,
-        //        ClientId = "client.cnf",
-        //        ClientSecret = "foo",
-        //        Scope = "api1"
-        //    });
+        [Fact]
+        public async Task Valid_request_with_confirmation_should_return_expected_payload()
+        {
+            var response = await _client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+            {
+                Address = TokenEndpoint,
+                ClientId = "client.cnf",
+                ClientSecret = "foo",
+                Scope = "api1"
+            });
 
-        //    response.IsError.Should().Be(false);
-        //    response.ExpiresIn.Should().Be(3600);
-        //    response.TokenType.Should().Be("Bearer");
-        //    response.IdentityToken.Should().BeNull();
-        //    response.RefreshToken.Should().BeNull();
+            response.IsError.Should().Be(false);
+            response.ExpiresIn.Should().Be(3600);
+            response.TokenType.Should().Be("Bearer");
+            response.IdentityToken.Should().BeNull();
+            response.RefreshToken.Should().BeNull();
 
-        //    var payload = GetPayload(response);
+            var payload = GetJsonElementPayload(response);
 
-        //    payload.Count().Should().Be(9);
-        //    payload.Should().Contain("iss", "https://idsvr4");
-        //    payload.Should().Contain("client_id", "client.cnf");
-        //    payload.Keys.Should().Contain("jti");
-        //    payload.Keys.Should().Contain("iat");
+            payload.Count().Should().Be(9);
+            payload["iss"].ToString().Should().Be("https://idsvr4");
+            payload["aud"].ToString().Should().Be("api");
+            payload["client_id"].ToString().Should().Be("client.cnf");
+            payload.Keys.Should().Contain("jti");
+            payload.Keys.Should().Contain("iat");
 
-        //    payload["aud"].Should().Be("api");
+            var scopes = payload["scope"].ToStringList();
+            scopes.First().ToString().Should().Be("api1");
 
-        //    var scopes = payload["scope"] as JArray;
-        //    scopes.First().ToString().Should().Be("api1");
-
-        //    var cnf = payload["cnf"] as JObject;
-        //    cnf["x5t#S256"].ToString().Should().Be("foo");
-        //}
+            // TODO: Fix / Figure out why it is broken
+            //var cnf = payload["cnf"];
+            //cnf.TryGetString("x5t#S256").Should().Be("foo");
+        }
 
         [Fact]
         public async Task Requesting_multiple_scopes_should_return_expected_payload()
@@ -451,6 +454,15 @@ namespace IdentityServer.IntegrationTests.Clients
         {
             var token = response.AccessToken.Split('.').Skip(1).Take(1).First();
             var dictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(
+                Encoding.UTF8.GetString(Base64Url.Decode(token)));
+
+            return dictionary;
+        }
+
+        private Dictionary<string, JsonElement> GetJsonElementPayload(TokenResponse response)
+        {
+            var token = response.AccessToken.Split('.').Skip(1).Take(1).First();
+            var dictionary = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(
                 Encoding.UTF8.GetString(Base64Url.Decode(token)));
 
             return dictionary;

@@ -2,20 +2,20 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using FluentAssertions;
+using IdentityModel;
+using IdentityModel.Client;
+using IdentityServer.IntegrationTests.Clients.Setup;
+using IdentityServer.IntegrationTests.Extensions;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-using FluentAssertions;
-using IdentityModel;
-using IdentityModel.Client;
-using IdentityServer.IntegrationTests.Clients.Setup;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace IdentityServer.IntegrationTests.Clients
@@ -157,53 +157,53 @@ namespace IdentityServer.IntegrationTests.Clients
             userInfo.HttpStatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
-        //[Fact]
-        //public async Task Complex_json_should_be_correct()
-        //{
-        //    var response = await _client.RequestPasswordTokenAsync(new PasswordTokenRequest
-        //    {
-        //        Address = TokenEndpoint,
-        //        ClientId = "roclient",
-        //        ClientSecret = "secret",
+        [Fact]
+        public async Task Complex_json_should_be_correct()
+        {
+            var response = await _client.RequestPasswordTokenAsync(new PasswordTokenRequest
+            {
+                Address = TokenEndpoint,
+                ClientId = "roclient",
+                ClientSecret = "secret",
 
-        //        Scope = "openid email api1 api4.with.roles roles",
-        //        UserName = "bob",
-        //        Password = "bob"
-        //    });
+                Scope = "openid email api1 api4.with.roles roles",
+                UserName = "bob",
+                Password = "bob"
+            });
 
-        //    response.IsError.Should().BeFalse();
-            
-        //    var payload = GetPayload(response);
+            response.IsError.Should().BeFalse();
 
-        //    var scopes = ((JArray)payload["scope"]).Select(x => x.ToString()).ToArray();
-        //    scopes.Length.Should().Be(5);
-        //    scopes.Should().Contain("openid");
-        //    scopes.Should().Contain("email");
-        //    scopes.Should().Contain("api1");
-        //    scopes.Should().Contain("api4.with.roles");
-        //    scopes.Should().Contain("roles");
+            var payload = GetPayload(response);
 
-        //    var roles = ((JArray)payload["role"]).Select(x => x.ToString()).ToArray();
-        //    roles.Length.Should().Be(2);
-        //    roles.Should().Contain("Geek");
-        //    roles.Should().Contain("Developer");
+            var scopes = ((JsonElement) payload["scope"]).ToStringList();
+            scopes.Count.Should().Be(5);
+            scopes.Should().Contain("openid");
+            scopes.Should().Contain("email");
+            scopes.Should().Contain("api1");
+            scopes.Should().Contain("api4.with.roles");
+            scopes.Should().Contain("roles");
 
-        //    var userInfo = await _client.GetUserInfoAsync(new UserInfoRequest
-        //    {
-        //        Address = UserInfoEndpoint,
-        //        Token = response.AccessToken
-        //    });
+            var roles = ((JsonElement) payload["role"]).ToStringList();
+            roles.Count.Should().Be(2);
+            roles.Should().Contain("Geek");
+            roles.Should().Contain("Developer");
 
-        //    roles = userInfo.Claims.Select(x => x.ToString()).ToArray();
-        //    roles.Length.Should().Be(2);
-        //    roles.Should().Contain("Geek");
-        //    roles.Should().Contain("Developer");
-        //}
+            var userInfo = await _client.GetUserInfoAsync(new UserInfoRequest
+            {
+                Address = UserInfoEndpoint,
+                Token = response.AccessToken
+            });
+
+            roles = userInfo.Json.TryGetStringArray("role").ToList();
+            roles.Count.Should().Be(2);
+            roles.Should().Contain("Geek");
+            roles.Should().Contain("Developer");
+        }
 
         private Dictionary<string, object> GetPayload(TokenResponse response)
         {
             var token = response.AccessToken.Split('.').Skip(1).Take(1).First();
-            var dictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(
+            var dictionary = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(
                 Encoding.UTF8.GetString(Base64Url.Decode(token)));
 
             return dictionary;
